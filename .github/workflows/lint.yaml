@@ -25,8 +25,6 @@ jobs:
       - run: ls -al -n ..
       - run: ls -al "$GITHUB_WORKSPACE"
       - run: ls -al -n "$GITHUB_WORKSPACE"
-      - run: mount
-      - run: df -aTh
       - uses: actions/checkout@v3
       - name: Enable Problem Matcher for GitHub annotations
         run: echo "::add-matcher::.github/problem-matcher-lint-generic-nolints.json"
@@ -45,8 +43,6 @@ jobs:
       - run: ls -al -n ..
       - run: ls -al "$GITHUB_WORKSPACE"
       - run: ls -al -n "$GITHUB_WORKSPACE"
-      - run: mount
-      - run: df -aTh
       - uses: actions/checkout@v3
       - name: Update package database
         run: apt-get update -y
@@ -87,13 +83,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: debian:stable
-      options: "--user 1001:123"
+      options: "-v ${{ github.workspace }}:/__w/ola/ola"
     needs: build
     steps:
-      - run: id
-      - run: ls -aln .
-      - run: mount
-      - run: df -aTh
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
         with:
@@ -108,9 +100,6 @@ jobs:
           rm ola-debian-stable-built-source-tree.tar.gz
       - name: Display structure of extracted files
         run: ls -alR
-      - name: Enable Problem Matcher for GitHub annotations
-        run: echo "::add-matcher::.github/problem-matcher-lint-cpplint.json"
-      - run: 'echo "./common/base/Credentials.cpp:31:  Weird number of spaces at line-start.  Are you using a 2-space indent?  [whitespace/indent] [3]"'
       - name: Update package database
         run: apt-get update -y
       - name: Install build tools
@@ -127,9 +116,9 @@ jobs:
           apt-get -y install libcppunit-dev uuid-dev libncurses5-dev \
             libmicrohttpd-dev protobuf-compiler python3-protobuf \
             libprotobuf-dev libprotoc-dev zlib1g-dev libftdi-dev \
-      #       libusb-1.0-0-dev liblo-dev libavahi-client-dev python3-numpy
-      # - name: Enable Problem Matcher for GitHub annotations
-      #   run: echo "::add-matcher::.github/problem-matcher-lint-cpplint.json"
+            libusb-1.0-0-dev liblo-dev libavahi-client-dev python3-numpy
+      - name: Enable Problem Matcher for GitHub annotations
+        run: echo "::add-matcher::.github/problem-matcher-lint-cpplint.json"
       - name: cpplint
         run: make cpplint VERBOSE=1
   flake8:
