@@ -70,6 +70,12 @@ jobs:
     container: debian:stable
     needs: build
     steps:
+      # In order for annotations to work properly, checkout must be performed.
+      # The checkout is then discarded in favor of the artifacts.
+      # See https://github.com/actions/runner/issues/1009#issuecomment-798262313
+      - uses: actions/checkout@v3
+      - name: Remove checkout in favor of artifacts
+        run: rm -rf ..?* .[!.]* *
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
         with:
@@ -111,6 +117,12 @@ jobs:
     container: debian:stable
     needs: build
     steps:
+      # In order for annotations to work properly, checkout must be performed.
+      # The checkout is then discarded in favor of the artifacts.
+      # See https://github.com/actions/runner/issues/1009#issuecomment-798262313
+      - uses: actions/checkout@v3
+      - name: Remove checkout in favor of artifacts
+        run: rm -rf ..?* .[!.]* *
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
         with:

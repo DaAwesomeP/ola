@@ -326,7 +326,7 @@ def CheckLicenceForFile(file_name, licence, lang, diff, fix):
     return 1
 
 
-def main():
+def main():                                                                                       
   diff, fix = ParseArgs()
   licences = GetDirectoryLicences(os.getcwd())
   errors = 0
