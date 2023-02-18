@@ -20,6 +20,7 @@ jobs:
     steps:
       - run: pwd
       - run: echo "$GITHUB_WORKSPACE"
+      - run: echo "${{ github.workspace }}"
       - uses: actions/checkout@v3
       - run: pwd
       - name: Enable Problem Matcher for GitHub annotations
@@ -36,6 +37,7 @@ jobs:
     steps:
       - run: pwd
       - run: echo "$GITHUB_WORKSPACE"
+      - run: echo "${{ github.workspace }}"
       - uses: actions/checkout@v3
       - run: pwd
       - name: Update package database
@@ -85,6 +87,7 @@ jobs:
     steps:
       - run: pwd
       - run: echo "$GITHUB_WORKSPACE"
+      - run: echo "${{ github.workspace }}"
       # In order for annotations to work properly, checkout must be performed.
       # The checkout is then discarded in favor of the artifacts.
       # See https://github.com/actions/runner/issues/1009#issuecomment-798262313
