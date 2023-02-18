@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: pwd
+      - run: echo "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v3
       - run: pwd
       - name: Enable Problem Matcher for GitHub annotations
@@ -34,6 +35,7 @@ jobs:
     container: debian:stable
     steps:
       - run: pwd
+      - run: echo "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v3
       - run: pwd
       - name: Update package database
@@ -82,13 +84,15 @@ jobs:
     needs: build
     steps:
       - run: pwd
+      - run: echo "$GITHUB_WORKSPACE"
       # In order for annotations to work properly, checkout must be performed.
       # The checkout is then discarded in favor of the artifacts.
       # See https://github.com/actions/runner/issues/1009#issuecomment-798262313
       - uses: actions/checkout@v3
       - run: pwd
-      - name: Remove checkout in favor of artifacts
-        run: rm -rf ..?* .[!.]* *
+      # - name: Remove checkout in favor of artifacts
+      #   shell: bash
+      #   run: rm -rf ..?* .[!.]* *
       - run: pwd
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
@@ -140,6 +144,7 @@ jobs:
       # See https://github.com/actions/runner/issues/1009#issuecomment-798262313
       - uses: actions/checkout@v3
       - name: Remove checkout in favor of artifacts
+        shell: bash
         run: rm -rf ..?* .[!.]* *
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
