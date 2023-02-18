@@ -18,14 +18,8 @@ jobs:
     name: Count generic NOLINTs
     runs-on: ubuntu-latest
     steps:
-      - run: id
-      - run: ls -al
-      - run: ls -al -n
-      - run: ls -al ..
-      - run: ls -al -n ..
-      - run: ls -al "$GITHUB_WORKSPACE"
-      - run: ls -al -n "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v3
+      - run: cat .git/config
       - name: Enable Problem Matcher for GitHub annotations
         run: echo "::add-matcher::.github/problem-matcher-lint-generic-nolints.json"
       - name: Count the number of generic NOLINTs
@@ -36,14 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     container: debian:stable
     steps:
-      - run: id
-      - run: ls -al
-      - run: ls -al -n
-      - run: ls -al ..
-      - run: ls -al -n ..
-      - run: ls -al "$GITHUB_WORKSPACE"
-      - run: ls -al -n "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v3
+      - run: cat .git/config
       - name: Update package database
         run: apt-get update -y
       - name: Install build tools
@@ -81,9 +69,7 @@ jobs:
   cpplint:
     name: cpplint
     runs-on: ubuntu-latest
-    container:
-      image: debian:stable
-      options: "-v ${{ github.workspace }}:/__w/ola/ola"
+    container: debian:stable
     needs: build
     steps:
       - name: Download built source tree archive
