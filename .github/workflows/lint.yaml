@@ -98,14 +98,6 @@ jobs:
     needs: build
     steps:
       - run: pwd
-      - name: Workaround for GitHub Action file annotations in container runners
-        shell: bash
-        run: |
-          if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
-            mkdir -p "$(dirname "${{ github.workspace }}")"
-            cp -r "$GITHUB_WORKSPACE/*" "${{ github.workspace }}"
-          fi
-          ls -al "${{ github.workspace }}"
       - run: pwd
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
@@ -123,6 +115,14 @@ jobs:
       - run: pwd
       - name: Display structure of extracted files
         run: ls -alR
+      - name: Workaround for GitHub Action file annotations in container runners
+        shell: bash
+        run: |
+          if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
+            mkdir -p "$(dirname "${{ github.workspace }}")"
+            cp -r "$GITHUB_WORKSPACE/*" "${{ github.workspace }}"
+          fi
+          ls -al "${{ github.workspace }}"
       - name: Update package database
         run: apt-get update -y
       - name: Install build tools
@@ -155,14 +155,6 @@ jobs:
         GITHUB_WORKSPACE: "${{ github.workspace }}" 
     needs: build
     steps:
-      - name: Workaround for GitHub Action file annotations in container runners
-        shell: bash
-        run: |
-          if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
-            mkdir -p "$(dirname "${{ github.workspace }}")"
-            cp -r "$GITHUB_WORKSPACE/*" "${{ github.workspace }}"
-          fi
-          ls -al "${{ github.workspace }}"
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
         with:
@@ -177,6 +169,14 @@ jobs:
           rm ola-debian-stable-built-source-tree.tar.gz
       - name: Display structure of extracted files
         run: ls -alR
+      - name: Workaround for GitHub Action file annotations in container runners
+        shell: bash
+        run: |
+          if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
+            mkdir -p "$(dirname "${{ github.workspace }}")"
+            cp -r "$GITHUB_WORKSPACE/*" "${{ github.workspace }}"
+          fi
+          ls -al "${{ github.workspace }}"
       - name: Update package database
         run: apt-get update -y
       - name: Install build tools
