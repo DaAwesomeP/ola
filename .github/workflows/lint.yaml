@@ -83,7 +83,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: debian:stable
-      options: "-v ${{ github.workspace }}:/__w/ola/ola"
     needs: build
     steps:
       - name: Download built source tree archive
