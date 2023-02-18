@@ -39,14 +39,6 @@ jobs:
         GITHUB_WORKSPACE: "${{ github.workspace }}"
     steps:
       - run: pwd
-      - name: Workaround for GitHub Action file annotations in container runners
-        shell: bash
-        run: |
-          if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
-            mkdir -p "$(dirname "${{ github.workspace }}")"
-            cp -r "$GITHUB_WORKSPACE/*" "${{ github.workspace }}"
-          fi
-          ls -al "${{ github.workspace }}"
       - uses: actions/checkout@v3
       - run: pwd
       - name: Update package database
