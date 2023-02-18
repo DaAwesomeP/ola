@@ -112,7 +112,7 @@ jobs:
         run: |
           if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
             mkdir -p "$(dirname "${{ github.workspace }}")"
-            cp -r "$GITHUB_WORKSPACE/*" "${{ github.workspace }}"
+            cp -r "$GITHUB_WORKSPACE/." "${{ github.workspace }}/"
           fi
           ls -al "${{ github.workspace }}"
       - name: Update package database
@@ -166,7 +166,7 @@ jobs:
         run: |
           if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
             mkdir -p "$(dirname "${{ github.workspace }}")"
-            cp -r "$GITHUB_WORKSPACE/*" "${{ github.workspace }}"
+            cp -r "$GITHUB_WORKSPACE/." "${{ github.workspace }}/"
           fi
           ls -al "${{ github.workspace }}"
       - name: Update package database
