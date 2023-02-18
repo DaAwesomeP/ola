@@ -31,6 +31,8 @@ jobs:
     container: debian:stable
     steps:
       - uses: actions/checkout@v3
+      - run: ls -al .
+      - run: ls -al .git
       - run: cat .git/config
       - name: Update package database
         run: apt-get update -y
