@@ -20,8 +20,11 @@ jobs:
     steps:
       - run: id
       - run: ls -al
+      - run: ls -al -n
       - run: ls -al ..
+      - run: ls -al -n ..
       - run: ls -al "$GITHUB_WORKSPACE"
+      - run: ls -al -n "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v3
       - name: Enable Problem Matcher for GitHub annotations
         run: echo "::add-matcher::.github/problem-matcher-lint-generic-nolints.json"
@@ -33,6 +36,13 @@ jobs:
     runs-on: ubuntu-latest
     container: debian:stable
     steps:
+      - run: id
+      - run: ls -al
+      - run: ls -al -n
+      - run: ls -al ..
+      - run: ls -al -n ..
+      - run: ls -al "$GITHUB_WORKSPACE"
+      - run: ls -al -n "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v3
       - name: Update package database
         run: apt-get update -y
@@ -74,10 +84,6 @@ jobs:
     container: debian:stable
     needs: build
     steps:
-      - run: id
-      - run: ls -al
-      - run: ls -al ..
-      - run: ls -al "$GITHUB_WORKSPACE"
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
         with:
