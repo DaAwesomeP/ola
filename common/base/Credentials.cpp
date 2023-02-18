@@ -13,7 +13,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
- * Credentials.cpp
+ * Credentials.cppFAIL
  * Handle getting and setting a process's credentials.
  * Copyright (C) 2012 Simon Newton
  */
@@ -24,7 +24,7 @@
  * @file Credentials.cpp
  * @}
  */
-
+NOLINT
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif  // HAVE_CONFIG_H
