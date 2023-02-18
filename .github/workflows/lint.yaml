@@ -18,29 +18,22 @@ jobs:
     name: Count generic NOLINTs
     runs-on: ubuntu-latest
     steps:
-      - run: pwd
-      - run: echo "$GITHUB_WORKSPACE"
-      - run: echo "${{ github.workspace }}"
+      - run: id
+      - run: ls -al
+      - run: ls -al ..
+      - run: ls -al "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v3
-      - run: pwd
       - name: Enable Problem Matcher for GitHub annotations
         run: echo "::add-matcher::.github/problem-matcher-lint-generic-nolints.json"
-      - run: pwd
       - name: Count the number of generic NOLINTs
         shell: bash
         run: ./scripts/count_generic_nolints.sh
-      - run: pwd
   build:
     name: Build for Lint Tasks
     runs-on: ubuntu-latest
-    container:
-      image: debian:stable
-      env:
-        GITHUB_WORKSPACE: "${{ github.workspace }}"
+    container: debian:stable
     steps:
-      - run: pwd
       - uses: actions/checkout@v3
-      - run: pwd
       - name: Update package database
         run: apt-get update -y
       - name: Install build tools
@@ -58,22 +51,17 @@ jobs:
             libmicrohttpd-dev protobuf-compiler python3-protobuf \
             libprotobuf-dev libprotoc-dev zlib1g-dev libftdi-dev \
             libusb-1.0-0-dev liblo-dev libavahi-client-dev python3-numpy
-      - run: pwd
       - name: Autoreconf
         run: autoreconf -i
-      - run: pwd
       - name: Configure
         run: ./configure --enable-rdm-tests --enable-ja-rule --enable-e133
-      - run: pwd
       - name: Build
         run: make builtfiles VERBOSE=1
-      - run: pwd
       - name: Archive artifacts to speed up slow GH Actions upload/download
         shell: bash
         run: |
           touch ola-debian-stable-built-source-tree.tar.gz
           tar --exclude=ola-debian-stable-built-source-tree.tar.gz -cvzf ola-debian-stable-built-source-tree.tar.gz .
-      - run: pwd
       - name: SHA256 artifact archive
         run: sha256sum ola-debian-stable-built-source-tree.tar.gz
       - uses: actions/upload-artifact@v3
@@ -83,20 +71,18 @@ jobs:
   cpplint:
     name: cpplint
     runs-on: ubuntu-latest
-    container:
-      image: debian:stable
-      env:
-        GITHUB_WORKSPACE: "${{ github.workspace }}"
+    container: debian:stable
     needs: build
     steps:
-      - run: pwd
-      - run: pwd
+      - run: id
+      - run: ls -al
+      - run: ls -al ..
+      - run: ls -al "$GITHUB_WORKSPACE"
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
         with:
           name: ola-debian-stable-built-source-tree
           path: .
-      - run: pwd
       - name: SHA256 artifact archive
         run: sha256sum ola-debian-stable-built-source-tree.tar.gz
       - name: Unarchive artifacts and delete archive
@@ -104,17 +90,8 @@ jobs:
         run: |
           tar -xvzf ola-debian-stable-built-source-tree.tar.gz .
           rm ola-debian-stable-built-source-tree.tar.gz
-      - run: pwd
       - name: Display structure of extracted files
         run: ls -alR
-      - name: Workaround for GitHub Action file annotations in container runners
-        shell: bash
-        run: |
-          if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
-            mkdir -p "$(dirname "${{ github.workspace }}")"
-            cp -r "$GITHUB_WORKSPACE/." "${{ github.workspace }}/"
-          fi
-          ls -al "${{ github.workspace }}"
       - name: Update package database
         run: apt-get update -y
       - name: Install build tools
@@ -132,19 +109,14 @@ jobs:
             libmicrohttpd-dev protobuf-compiler python3-protobuf \
             libprotobuf-dev libprotoc-dev zlib1g-dev libftdi-dev \
             libusb-1.0-0-dev liblo-dev libavahi-client-dev python3-numpy
-      - run: pwd
       - name: Enable Problem Matcher for GitHub annotations
         run: echo "::add-matcher::.github/problem-matcher-lint-cpplint.json"
-      - run: pwd
       - name: cpplint
         run: make cpplint VERBOSE=1
   flake8:
     name: flake8
     runs-on: ubuntu-latest
-    container:
-      image: debian:stable
-      env:
-        GITHUB_WORKSPACE: "${{ github.workspace }}" 
+    container: debian:stable
     needs: build
     steps:
       - name: Download built source tree archive
@@ -161,14 +133,6 @@ jobs:
           rm ola-debian-stable-built-source-tree.tar.gz
       - name: Display structure of extracted files
         run: ls -alR
-      - name: Workaround for GitHub Action file annotations in container runners
-        shell: bash
-        run: |
-          if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
-            mkdir -p "$(dirname "${{ github.workspace }}")"
-            cp -r "$GITHUB_WORKSPACE/." "${{ github.workspace }}/"
-          fi
-          ls -al "${{ github.workspace }}"
       - name: Update package database
         run: apt-get update -y
       - name: Install build tools
