@@ -33,11 +33,22 @@ jobs:
   build:
     name: Build for Lint Tasks
     runs-on: ubuntu-latest
-    container: debian:stable
+    container:
+      image: debian:stable
+      env:
+        GITHUB_WORKSPACE: "${{ github.workspace }}"
     steps:
       - run: pwd
       - run: echo "$GITHUB_WORKSPACE"
       - run: echo "${{ github.workspace }}"
+      - shell: bash
+        run: |
+          if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
+            mkdir -p "$(dirname "${{ github.workspace }}")"
+            ln -s "$GITHUB_WORKSPACE" "${{ github.workspace }}"
+          fi
+          ls -al "$(dirname "${{ github.workspace }}")"
+          ls -al "${{ github.workspace }}"
       - uses: actions/checkout@v3
       - run: pwd
       - name: Update package database
@@ -82,20 +93,23 @@ jobs:
   cpplint:
     name: cpplint
     runs-on: ubuntu-latest
-    container: debian:stable
+    container:
+      image: debian:stable
+      env:
+        GITHUB_WORKSPACE: "${{ github.workspace }}"
     needs: build
     steps:
       - run: pwd
       - run: echo "$GITHUB_WORKSPACE"
       - run: echo "${{ github.workspace }}"
-      # In order for annotations to work properly, checkout must be performed.
-      # The checkout is then discarded in favor of the artifacts.
-      # See https://github.com/actions/runner/issues/1009#issuecomment-798262313
-      - uses: actions/checkout@v3
-      - run: pwd
-      # - name: Remove checkout in favor of artifacts
-      #   shell: bash
-      #   run: rm -rf ..?* .[!.]* *
+      - shell: bash
+        run: |
+          if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
+            mkdir -p "$(dirname "${{ github.workspace }}")"
+            ln -s "$GITHUB_WORKSPACE" "${{ github.workspace }}"
+          fi
+          ls -al "$(dirname "${{ github.workspace }}")"
+          ls -al "${{ github.workspace }}"
       - run: pwd
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
@@ -139,16 +153,20 @@ jobs:
   flake8:
     name: flake8
     runs-on: ubuntu-latest
-    container: debian:stable
+    container:
+      image: debian:stable
+      env:
+        GITHUB_WORKSPACE: "${{ github.workspace }}" 
     needs: build
     steps:
-      # In order for annotations to work properly, checkout must be performed.
-      # The checkout is then discarded in favor of the artifacts.
-      # See https://github.com/actions/runner/issues/1009#issuecomment-798262313
-      - uses: actions/checkout@v3
-      - name: Remove checkout in favor of artifacts
-        shell: bash
-        run: rm -rf ..?* .[!.]* *
+      - shell: bash
+        run: |
+          if [ "$GITHUB_WORKSPACE" != "${{ github.workspace }}" ]; then
+            mkdir -p "$(dirname "${{ github.workspace }}")"
+            ln -s "$GITHUB_WORKSPACE" "${{ github.workspace }}"
+          fi
+          ls -al "$(dirname "${{ github.workspace }}")"
+          ls -al "${{ github.workspace }}"
       - name: Download built source tree archive
         uses: actions/download-artifact@v3
         with:
