@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         image_tag: [bullseye, bookworm, sid]
-        architecture: [amd64]
+        architecture: [amd64, arm64, armhf, s390x]
     container: debian:${{ matrix.image_tag }}
     steps:
       - name: Get number of CPU cores
@@ -31,14 +31,14 @@ jobs:
       - name: Install build tools
         run: apt-get -y install devscripts adduser fakeroot sudo
       - name: Install build dependencies
-        run: mk-build-deps -t "apt-get -y -o Debug::pkgProblemResolver=yes --no-install-recommends" -i -r
+        run: mk-build-deps -t "apt-get -y -o Debug::pkgProblemResolver=yes --no-install-recommends" -i -r --host-arch ${{ matrix.architecture }}
       - name: Set up build user
         run: |
           adduser --disabled-password --gecos "" builduser
           chown -R builduser:builduser .
           chown builduser:builduser ..
       - name: Build
-        run: sudo -u builduser dpkg-buildpackage -b -rfakeroot -j${{ steps.num-cpu-cores.outputs.NUM_CPU_CORES }}
+        run: sudo -u builduser dpkg-buildpackage -b -rfakeroot --host-arch ${{ matrix.architecture }} -j${{ steps.num-cpu-cores.outputs.NUM_CPU_CORES }}
       - name: Move built files
         if: always()
         run: |
